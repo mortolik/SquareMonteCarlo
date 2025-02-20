@@ -10,4 +10,5 @@ public:
     explicit SquareMC(QObject *parent = nullptr);
 
     double exactArea() const;
+    double monteCarloArea(int n) const;
 };
