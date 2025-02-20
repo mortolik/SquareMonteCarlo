@@ -28,9 +28,10 @@ private slots:
 private:
     QtCharts::QChartView *chartView;
 
-    SquareMC squareMC;
+    SquareMC* squareMC;
     QLabel *exactAreaLabel;
     QLabel *mcAreaLabel;
+    QLabel *m_mcErrorLabel;
     QPushButton *calcButton;
     QVBoxLayout *mainLayout;
     QWidget *centralWidget;

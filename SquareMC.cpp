@@ -28,3 +28,16 @@ double SquareMC::monteCarloArea(int n) const
     double rectArea = 2 * M_PI * M_PI;
     return rectArea * static_cast<double>(countInside) / n;
 }
+
+double SquareMC::evaluateAccuracy(int n) const
+{
+    if (n <= 0) return 0.0;
+
+    double exactArea = M_PI * M_PI / 2.0;
+    double approxArea = monteCarloArea(n);
+
+    double absError = fabs(exactArea - approxArea);
+    double relError = (absError / exactArea) * 100.0;
+
+    return relError;
+}

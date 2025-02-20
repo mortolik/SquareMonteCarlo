@@ -53,8 +53,9 @@ void MainWindow::createUI()
     centralWidget = new QWidget(this);
     mainLayout = new QVBoxLayout(centralWidget);
 
-    exactAreaLabel = new QLabel(QString("Точная площадь: %1").arg(squareMC.exactArea()), this);
+    exactAreaLabel = new QLabel(QString("Точная площадь: %1").arg(squareMC->exactArea()), this);
     mcAreaLabel = new QLabel("Приближенная площадь: ---", this);
+    m_mcErrorLabel = new QLabel("Точность метода: ---", this);
     calcButton = new QPushButton("Запустить Монте-Карло", this);
 
     connect(calcButton, &QPushButton::clicked, this, &MainWindow::calculateMonteCarlo);
@@ -62,6 +63,7 @@ void MainWindow::createUI()
     mainLayout->addWidget(chartView);
     mainLayout->addWidget(exactAreaLabel);
     mainLayout->addWidget(mcAreaLabel);
+    mainLayout->addWidget(m_mcErrorLabel);
     mainLayout->addWidget(calcButton);
 
     centralWidget->setLayout(mainLayout);
@@ -70,6 +72,8 @@ void MainWindow::createUI()
 void MainWindow::calculateMonteCarlo()
 {
     int n = 100000;
-    double mcArea = squareMC.monteCarloArea(n);
+    double mcArea = squareMC->monteCarloArea(n);
     mcAreaLabel->setText(QString("Приближенная площадь (%1 точек): %2").arg(n).arg(mcArea));
+    double error = squareMC->evaluateAccuracy(n);
+    m_mcErrorLabel->setText(QString("Точность метода %1").arg(error));
 }
