@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QtCharts/QValueAxis>
@@ -12,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     createChart();
     createUI();
 
-    setCentralWidget(centralWidget);
+    setCentralWidget(m_centralWidget);
     setMinimumSize(800, 800);
 }
 
@@ -50,30 +51,38 @@ void MainWindow::createChart()
 
 void MainWindow::createUI()
 {
-    centralWidget = new QWidget(this);
-    mainLayout = new QVBoxLayout(centralWidget);
+    m_centralWidget = new QWidget(this);
+    m_mainLayout = new QVBoxLayout(m_centralWidget);
 
-    exactAreaLabel = new QLabel(QString("Точная площадь: %1").arg(squareMC->exactArea()), this);
-    mcAreaLabel = new QLabel("Приближенная площадь: ---", this);
+    QLabel* pointsLable = new QLabel("Количество точек:", this);
+    m_countPointsLineEdit = new QLineEdit("10000");
+    QHBoxLayout *pointsLAyout = new QHBoxLayout();
+    pointsLAyout->addWidget(pointsLable);
+    pointsLAyout->addWidget(m_countPointsLineEdit);
+
+    m_exactAreaLabel = new QLabel(QString("Точная площадь: %1").arg(m_squareMC->exactArea()), this);
+    m_mcAreaLabel = new QLabel("Приближенная площадь: ---", this);
     m_mcErrorLabel = new QLabel("Точность метода: ---", this);
-    calcButton = new QPushButton("Запустить Монте-Карло", this);
+    m_calcButton = new QPushButton("Запустить Монте-Карло", this);
 
-    connect(calcButton, &QPushButton::clicked, this, &MainWindow::calculateMonteCarlo);
+    connect(m_calcButton, &QPushButton::clicked, this, &MainWindow::calculateMonteCarlo);
 
-    mainLayout->addWidget(chartView);
-    mainLayout->addWidget(exactAreaLabel);
-    mainLayout->addWidget(mcAreaLabel);
-    mainLayout->addWidget(m_mcErrorLabel);
-    mainLayout->addWidget(calcButton);
+    m_mainLayout->addWidget(chartView);
+    m_mainLayout->addLayout(pointsLAyout);
+    m_mainLayout->addWidget(m_exactAreaLabel);
+    m_mainLayout->addWidget(m_mcAreaLabel);
+    m_mainLayout->addWidget(m_mcErrorLabel);
+    m_mainLayout->addWidget(m_calcButton);
 
-    centralWidget->setLayout(mainLayout);
+    m_centralWidget->setLayout(m_mainLayout);
 }
 
 void MainWindow::calculateMonteCarlo()
 {
-    int n = 100000;
-    double mcArea = squareMC->monteCarloArea(n);
-    mcAreaLabel->setText(QString("Приближенная площадь (%1 точек): %2").arg(n).arg(mcArea));
-    double error = squareMC->evaluateAccuracy(n);
+
+    m_countPoints = m_countPointsLineEdit->text().toInt();
+    double mcArea = m_squareMC->monteCarloArea(m_countPoints);
+    m_mcAreaLabel->setText(QString("Приближенная площадь (%1 точек): %2").arg(m_countPoints).arg(mcArea));
+    double error = m_squareMC->evaluateAccuracy(m_countPoints);
     m_mcErrorLabel->setText(QString("Точность метода %1").arg(error));
 }

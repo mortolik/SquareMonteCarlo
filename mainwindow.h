@@ -5,6 +5,7 @@
 #include <QtCharts/QLineSeries>
 
 QT_FORWARD_DECLARE_CLASS(QLabel);
+QT_FORWARD_DECLARE_CLASS(QLineEdit);
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout);
 QT_FORWARD_DECLARE_CLASS(QPushButton);
 
@@ -28,13 +29,18 @@ private slots:
 private:
     QtCharts::QChartView *chartView;
 
-    SquareMC* squareMC;
-    QLabel *exactAreaLabel;
-    QLabel *mcAreaLabel;
-    QLabel *m_mcErrorLabel;
-    QPushButton *calcButton;
-    QVBoxLayout *mainLayout;
-    QWidget *centralWidget;
+    int m_countPoints;
+
+    SquareMC* m_squareMC;
+
+    QLabel* m_exactAreaLabel;
+    QLabel* m_mcAreaLabel;
+    QLabel* m_mcErrorLabel;
+
+    QPushButton* m_calcButton;
+    QLineEdit* m_countPointsLineEdit;
+    QVBoxLayout* m_mainLayout;
+    QWidget* m_centralWidget;
 
     void createChart();
     void createUI();

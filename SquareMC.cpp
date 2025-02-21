@@ -6,38 +6,43 @@ SquareMC::SquareMC(QObject *parent) : QObject(parent) {}
 
 double SquareMC::exactArea() const
 {
-    return M_PI * M_PI;
+    return (M_PI * M_PI * M_PI) / 3.0;
 }
 
 double SquareMC::monteCarloArea(int n) const
 {
-    if (n <= 0) return 0.0;
+    if (n <= 0)
+        return 0.0;
 
     int countInside = 0;
     QRandomGenerator *randGen = QRandomGenerator::global();
 
     for (int i = 0; i < n; ++i)
     {
-        double x = randGen->generateDouble() * (2 * M_PI) - M_PI; // x ∈ [-π, π]
-        double y = randGen->generateDouble() * M_PI;              // y ∈ [0, π]
+        double x = (randGen->generateDouble() * 2.0 - 1.0) * M_PI; // x  [-π, π]
+        double y = (randGen->generateDouble() * 2.0 - 1.0) * M_PI; // y  [-π, π]
 
-        if (y <= fabs(x))
+        double rPoint = std::sqrt(x * x + y * y);
+        double phi = std::atan2(y, x);
+
+        double rCurve = std::fabs(phi);
+
+        if (rPoint <= rCurve)
             ++countInside;
     }
 
-    double rectArea = 2 * M_PI * M_PI;
+    // Площадь квадрата [-π, π] x [-π, π]
+    double rectArea = 4 * M_PI * M_PI;
     return rectArea * static_cast<double>(countInside) / n;
 }
 
 double SquareMC::evaluateAccuracy(int n) const
 {
-    if (n <= 0) return 0.0;
+    if (n <= 0)
+        return 0.0;
 
-    double exactArea = M_PI * M_PI / 2.0;
-    double approxArea = monteCarloArea(n);
+    //double absError = std::fabs(exactArea() - monteCarloArea(n));
+    //return (absError / exactArea()) * 100.0; // Относительная ошибка
 
-    double absError = fabs(exactArea - approxArea);
-    double relError = (absError / exactArea) * 100.0;
-
-    return relError;
+    return std::fabs(exactArea() - monteCarloArea(n));
 }
