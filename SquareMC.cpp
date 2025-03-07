@@ -1,4 +1,5 @@
 #include "SquareMC.hpp"
+#include "qpoint.h"
 #include <cmath>
 #include <QRandomGenerator>
 
@@ -9,10 +10,13 @@ double SquareMC::exactArea() const
     return (M_PI * M_PI * M_PI) / 3.0;
 }
 
-double SquareMC::monteCarloArea(int n) const
+MonteCarloResult SquareMC::monteCarloArea(int n) const
 {
+    MonteCarloResult result;
+    result.area = 0.0;
+
     if (n <= 0)
-        return 0.0;
+        return result;
 
     int countInside = 0;
     QRandomGenerator *randGen = QRandomGenerator::global();
@@ -29,11 +33,15 @@ double SquareMC::monteCarloArea(int n) const
 
         if (rPoint <= rCurve)
             ++countInside;
+
+        result.points.append(QPointF(x, y)); // Добавляем точку в результат
     }
 
     // Площадь квадрата [-π, π] x [-π, π]
     double rectArea = 4 * M_PI * M_PI;
-    return rectArea * static_cast<double>(countInside) / n;
+    result.area = rectArea * static_cast<double>(countInside) / n;
+
+    return result;
 }
 
 double SquareMC::evaluateAccuracy(int n) const
@@ -41,8 +49,5 @@ double SquareMC::evaluateAccuracy(int n) const
     if (n <= 0)
         return 0.0;
 
-    //double absError = std::fabs(exactArea() - monteCarloArea(n));
-    //return (absError / exactArea()) * 100.0; // Относительная ошибка
-
-    return std::fabs(exactArea() - monteCarloArea(n));
+    return std::fabs(exactArea() - monteCarloArea(n).area);
 }

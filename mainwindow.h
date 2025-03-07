@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
+#include <QScatterSeries>
 
 QT_FORWARD_DECLARE_CLASS(QLabel);
 QT_FORWARD_DECLARE_CLASS(QLineEdit);
@@ -28,6 +29,7 @@ private slots:
 
 private:
     QtCharts::QChartView *chartView;
+    QtCharts::QScatterSeries *mcPointsSeries;
 
     int m_countPoints;
 

@@ -2,6 +2,11 @@
 
 #include <QObject>
 
+struct MonteCarloResult
+{
+    double area;
+    QVector<QPointF> points;
+};
 class SquareMC : public QObject
 {
     Q_OBJECT
@@ -10,6 +15,6 @@ public:
     explicit SquareMC(QObject *parent = nullptr);
 
     double exactArea() const;
-    double monteCarloArea(int n) const;
+    MonteCarloResult monteCarloArea(int n) const;
     double evaluateAccuracy(int n) const;
 };
