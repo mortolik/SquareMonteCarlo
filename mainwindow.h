@@ -38,6 +38,7 @@ private:
     QLabel* m_exactAreaLabel;
     QLabel* m_mcAreaLabel;
     QLabel* m_mcErrorLabel;
+    QLineEdit *m_averageErrorLineEdit;
 
     QPushButton* m_calcButton;
     QLineEdit* m_countPointsLineEdit;

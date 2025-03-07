@@ -17,4 +17,5 @@ public:
     double exactArea() const;
     MonteCarloResult monteCarloArea(int n) const;
     double evaluateAccuracy(int n) const;
+    double evaluateAverageAccuracy(int n, int iterations = 100) const;
 };

@@ -51,3 +51,20 @@ double SquareMC::evaluateAccuracy(int n) const
 
     return std::fabs(exactArea() - monteCarloArea(n).area);
 }
+
+double SquareMC::evaluateAverageAccuracy(int n, int iterations) const
+{
+    if (n <= 0 || iterations <= 0)
+        return 0.0;
+
+    double totalError = 0.0;
+
+    for (int i = 0; i < iterations; ++i)
+    {
+        double mcArea = monteCarloArea(n).area;
+        double error = std::fabs(exactArea() - mcArea);
+        totalError += error;
+    }
+
+    return totalError / iterations;
+}

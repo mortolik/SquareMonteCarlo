@@ -85,6 +85,9 @@ void MainWindow::createUI()
     m_mcAreaLabel = new QLabel("Приближенная площадь: ---", this);
     m_mcErrorLabel = new QLabel("Точность метода: ---", this);
     m_calcButton = new QPushButton("Запустить Монте-Карло", this);
+    QLabel* averageErrorLabel = new QLabel("Средняя погрешность (100 итераций):", this);
+    m_averageErrorLineEdit = new QLineEdit(this);
+    m_averageErrorLineEdit->setReadOnly(true);
 
     connect(m_calcButton, &QPushButton::clicked, this, &MainWindow::calculateMonteCarlo);
 
@@ -93,6 +96,12 @@ void MainWindow::createUI()
     m_mainLayout->addWidget(m_exactAreaLabel);
     m_mainLayout->addWidget(m_mcAreaLabel);
     m_mainLayout->addWidget(m_mcErrorLabel);
+
+    QHBoxLayout* averageLayot = new QHBoxLayout();
+    averageLayot->addWidget(averageErrorLabel);
+    averageLayot->addWidget(m_averageErrorLineEdit);
+    m_mainLayout->addLayout(averageLayot);
+
     m_mainLayout->addWidget(m_calcButton);
 
     m_centralWidget->setLayout(m_mainLayout);
@@ -112,4 +121,7 @@ void MainWindow::calculateMonteCarlo()
     {
         mcPointsSeries->append(point);
     }
+
+    double averageError = m_squareMC->evaluateAverageAccuracy(m_countPoints, 100);
+    m_averageErrorLineEdit->setText(QString::number(averageError));
 }
