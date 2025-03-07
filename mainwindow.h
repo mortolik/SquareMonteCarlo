@@ -8,6 +8,7 @@
 QT_FORWARD_DECLARE_CLASS(QLabel);
 QT_FORWARD_DECLARE_CLASS(QLineEdit);
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout);
+QT_FORWARD_DECLARE_CLASS(QHBoxLayout);
 QT_FORWARD_DECLARE_CLASS(QPushButton);
 
 QT_BEGIN_NAMESPACE
@@ -38,12 +39,15 @@ private:
     QLabel* m_exactAreaLabel;
     QLabel* m_mcAreaLabel;
     QLabel* m_mcErrorLabel;
+
     QLineEdit *m_averageErrorLineEdit;
 
     QPushButton* m_calcButton;
     QLineEdit* m_countPointsLineEdit;
     QVBoxLayout* m_mainLayout;
     QWidget* m_centralWidget;
+
+    QHBoxLayout* createAverageLineEdit(int points);
 
     void createChart();
     void createUI();

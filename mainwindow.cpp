@@ -89,6 +89,23 @@ void MainWindow::createUI()
     m_averageErrorLineEdit = new QLineEdit(this);
     m_averageErrorLineEdit->setReadOnly(true);
 
+
+    QLabel* averageNameLabel = new QLabel("Средняя погрешность для");
+
+    QHBoxLayout *averageLayout10 = createAverageLineEdit(10);
+    QHBoxLayout *averageLayout100 = createAverageLineEdit(100);
+    QHBoxLayout *averageLayout1000 = createAverageLineEdit(1000);
+    QHBoxLayout *averageLayout10000 = createAverageLineEdit(10000);
+    QHBoxLayout *averageLayout100000 = createAverageLineEdit(100000);
+
+    QHBoxLayout *fullAverageLayot = new  QHBoxLayout();
+    fullAverageLayot->addWidget(averageNameLabel);
+    fullAverageLayot->addLayout(averageLayout10);
+    fullAverageLayot->addLayout(averageLayout100);
+    fullAverageLayot->addLayout(averageLayout1000);
+    fullAverageLayot->addLayout(averageLayout10000);
+    fullAverageLayot->addLayout(averageLayout100000);
+
     connect(m_calcButton, &QPushButton::clicked, this, &MainWindow::calculateMonteCarlo);
 
     m_mainLayout->addWidget(chartView);
@@ -100,7 +117,9 @@ void MainWindow::createUI()
     QHBoxLayout* averageLayot = new QHBoxLayout();
     averageLayot->addWidget(averageErrorLabel);
     averageLayot->addWidget(m_averageErrorLineEdit);
+
     m_mainLayout->addLayout(averageLayot);
+    m_mainLayout->addLayout(fullAverageLayot);
 
     m_mainLayout->addWidget(m_calcButton);
 
@@ -124,4 +143,20 @@ void MainWindow::calculateMonteCarlo()
 
     double averageError = m_squareMC->evaluateAverageAccuracy(m_countPoints, 100);
     m_averageErrorLineEdit->setText(QString::number(averageError));
+}
+
+QHBoxLayout* MainWindow::createAverageLineEdit(int points)
+{
+    QHBoxLayout* layout = new QHBoxLayout();;
+
+    double averageError = m_squareMC->evaluateAverageAccuracy(points, 100);
+
+    QLineEdit* lineEdit = new QLineEdit();
+    lineEdit->setText(QString::number(averageError));
+    QLabel* averageErrorLabel = new QLabel(QString("%1 точек:").arg(points), this);
+
+    layout->addWidget(averageErrorLabel);
+    layout->addWidget(lineEdit);
+
+    return layout;
 }
