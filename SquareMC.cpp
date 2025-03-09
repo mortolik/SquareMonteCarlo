@@ -21,10 +21,17 @@ MonteCarloResult SquareMC::monteCarloArea(int n) const
     int countInside = 0;
     QRandomGenerator *randGen = QRandomGenerator::global();
 
+    // Новые границы для x и y
+    double xMin = -3.14, xMax = 1.6;
+    double yMin = -2.2, yMax = 2.2;
+
     for (int i = 0; i < n; ++i)
     {
-        double x = (randGen->generateDouble() * 2.0 - 1.0) * M_PI; // x  [-π, π]
-        double y = (randGen->generateDouble() * 2.0 - 1.0) * M_PI; // y  [-π, π]
+        // Генерация x в диапазоне [-1.6, 1.6]
+        double x = (randGen->generateDouble() * (xMax - xMin) + xMin);
+
+        // Генерация y в диапазоне [-2.2, 2.2]
+        double y = (randGen->generateDouble() * (yMax - yMin) + yMin);
 
         double rPoint = std::sqrt(x * x + y * y);
         double phi = std::atan2(y, x);
@@ -37,8 +44,8 @@ MonteCarloResult SquareMC::monteCarloArea(int n) const
         result.points.append(QPointF(x, y)); // Добавляем точку в результат
     }
 
-    // Площадь квадрата [-π, π] x [-π, π]
-    double rectArea = 4 * M_PI * M_PI;
+    // Площадь нового прямоугольника
+    double rectArea = (xMax - xMin) * (yMax - yMin);
     result.area = rectArea * static_cast<double>(countInside) / n;
 
     return result;

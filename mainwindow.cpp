@@ -24,13 +24,13 @@ void MainWindow::createChart()
 {
     QtCharts::QChart *chart = new QtCharts::QChart();
     QtCharts::QLineSeries *series = new QtCharts::QLineSeries();
-
-    mcPointsSeries = new QtCharts::QScatterSeries();
-    QtCharts::QLineSeries *rectangleSeries = new QtCharts::QLineSeries();
+    mcPointsSeries = new QtCharts::QScatterSeries(); // Серия для точек Монте-Карло
+    QtCharts::QLineSeries *rectangleSeries = new QtCharts::QLineSeries(); // Серия для границы прямоугольника
 
     int points = 200;
     double step = 2 * M_PI / points;
 
+    // Строим кривую r = |phi|
     for (double phi = -M_PI; phi <= M_PI; phi += step)
     {
         double r = fabs(phi); // r = |phi|
@@ -38,27 +38,34 @@ void MainWindow::createChart()
         double y = r * sin(phi);
         series->append(x, y);
     }
-    series->setName("График r = |phi|");
-    rectangleSeries->setName("Граница прямоугольника");
-    mcPointsSeries->setName("Точки");
-    rectangleSeries->append(-M_PI, -M_PI);
-    rectangleSeries->append(-M_PI, M_PI);
-    rectangleSeries->append(M_PI, M_PI);
-    rectangleSeries->append(M_PI, -M_PI);
-    rectangleSeries->append(-M_PI, -M_PI);
 
+    // Новые границы для прямоугольника
+    double xMin = -3.14, xMax = 1.6;
+    double yMin = -2.2, yMax = 2.2;
+
+    // Добавляем границу прямоугольника
+    rectangleSeries->append(xMin, yMin);
+    rectangleSeries->append(xMin, yMax);
+    rectangleSeries->append(xMax, yMax);
+    rectangleSeries->append(xMax, yMin);
+    rectangleSeries->append(xMin, yMin);
+
+    // Настройка серии для точек Монте-Карло
     mcPointsSeries->setMarkerSize(5.0);
-    mcPointsSeries->setColor(Qt::red);
+    mcPointsSeries->setColor(Qt::blue);
 
+    // Добавляем все серии на график
     chart->addSeries(series);
     chart->addSeries(rectangleSeries);
     chart->addSeries(mcPointsSeries);
-    chart->setTitle("Метод Монте-Карло");
 
+    chart->setTitle("График кривой r = |φ|");
+
+    // Настройка осей с новыми границами
     QtCharts::QValueAxis *axisX = new QtCharts::QValueAxis();
     QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
-    axisX->setRange(-M_PI, M_PI);
-    axisY->setRange(-M_PI, M_PI);
+    axisX->setRange(xMin, xMax); // Новый диапазон для оси X
+    axisY->setRange(yMin, yMax); // Новый диапазон для оси Y
 
     chart->setAxisX(axisX, series);
     chart->setAxisY(axisY, series);
